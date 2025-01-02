@@ -1,1 +1,2 @@
-deno task --eval vitest run
+pnpm exec vitest run
+pnpm exec lint-staged

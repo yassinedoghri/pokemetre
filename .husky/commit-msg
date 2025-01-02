@@ -1,1 +1,1 @@
-deno task --eval commitlint --edit $1
+pnpm exec commitlint --verbose --edit $1

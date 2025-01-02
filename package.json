@@ -10,12 +10,24 @@
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-    "format": "prettier --write --ignore-path .gitignore .",
-    "lint": "prettier --check --ignore-path .gitignore . && stylelint '**/*.{css,svelte}' && eslint .",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && stylelint -f verbose '**/*.{css,svelte}' && eslint .",
     "test:unit": "vitest",
-    "test": "deno run test:unit -- --run",
+    "test": "pnpm run test:unit -- --run",
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx src/lib/db/seed.ts",
+    "db:destroy": "rm -f pokemetre.db",
+    "db:init": "pnpm run db:destroy && pnpm run db:push && pnpm run db:seed",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
     "commit": "cz",
     "prepare": "husky"
+  },
+  "dependencies": {
+    "@fast-csv/parse": "^5.0.2",
+    "@libsql/client": "^0.14.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.38.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
@@ -25,13 +37,17 @@
     "@sveltejs/adapter-auto": "^3.3.1",
     "@sveltejs/kit": "^2.15.1",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
+    "@types/node": "^22.10.3",
     "autoprefixer": "^10.4.20",
+    "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
+    "drizzle-kit": "^0.30.1",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.14.0",
     "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
     "postcss-html": "^1.7.0",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.2",
@@ -42,6 +58,7 @@
     "svelte": "^5.16.0",
     "svelte-check": "^4.1.1",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.19.0",
     "vite": "^6.0.6",
@@ -51,5 +68,15 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "lint-staged": {
+    "*.{css,svelte}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,js,svelte}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
