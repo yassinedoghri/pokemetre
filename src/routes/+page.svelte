@@ -1,5 +1,5 @@
 <div class="text-center">
-  <h1 class="text-4xl font-bold">Welcome to Pokémetre</h1>
+  <h1 class="text-4xl font-bold">Pokémètre</h1>
   <p>Set your height and weight to reveal your Pokémon mate!</p>
   <p>Adjust your scale to unveil your Pokémon tale!</p>
   <p>Enter your stats, and see who your Pokémon’s at!</p>
