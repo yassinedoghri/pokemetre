@@ -1,6 +1,6 @@
 {
   "name": "pokemetre",
-  "description": "",
+  "description": "Set your height and weight to reveal your Pokémon mate!",
   "private": true,
   "version": "0.0.1",
   "type": "module",

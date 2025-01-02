@@ -3,11 +3,13 @@
 {
   "name": "Debian x Deno",
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  },
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/guiyomh/features/vim:0": {},
-    "ghcr.io/warrenbuckley/codespace-features/sqlite:1": {},
     "ghcr.io/devcontainers-community/features/deno:1": {}
   },
   "customizations": {
@@ -28,7 +30,8 @@
         "yzhang.markdown-all-in-one",
         "DavidAnson.vscode-markdownlint",
         "Gruntfuggly.todo-tree",
-        "stylelint.vscode-stylelint"
+        "stylelint.vscode-stylelint",
+        "qwtel.sqlite-viewer"
       ]
     }
   }

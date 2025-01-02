@@ -1,3 +1,3 @@
-FROM denoland/deno:bin-2 AS deno
-FROM mcr.microsoft.com/devcontainers/typescript-node:20
-COPY --from=deno /deno /usr/local/bin/deno
+FROM mcr.microsoft.com/devcontainers/base:bookworm
+
+RUN sudo apt update && apt install sqlite3
