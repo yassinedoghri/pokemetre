@@ -10,7 +10,7 @@ const __dirname = path.dirname(__filename);
 
 const pokemonsData: (typeof pokemonsTable.$inferInsert)[] = [];
 fs.createReadStream(
-  path.resolve(__dirname, "assets", "../../../pokeapi/data/v2/csv/pokemon.csv")
+  path.resolve(__dirname, "../../pokeapi/data/v2/csv/pokemon.csv")
 )
   .pipe(parse({ headers: true }))
   .on("error", (error) => console.error(error))

@@ -15,7 +15,7 @@
     "test:unit": "vitest",
     "test": "pnpm run test:unit -- --run",
     "db:push": "drizzle-kit push",
-    "db:seed": "tsx src/lib/db/seed.ts",
+    "db:seed": "tsx src/lib/server/db/seed.ts",
     "db:destroy": "rm -f pokemetre.db",
     "db:init": "pnpm run db:destroy && pnpm run db:push && pnpm run db:seed",
     "db:generate": "drizzle-kit generate",
@@ -27,7 +27,8 @@
     "@fast-csv/parse": "^5.0.2",
     "@libsql/client": "^0.14.0",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.38.3"
+    "drizzle-orm": "^0.38.3",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.1",
@@ -35,6 +36,7 @@
     "@eslint/compat": "^1.2.4",
     "@eslint/js": "^9.17.0",
     "@sveltejs/adapter-auto": "^3.3.1",
+    "@sveltejs/enhanced-img": "^0.4.4",
     "@sveltejs/kit": "^2.15.1",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@types/node": "^22.10.3",

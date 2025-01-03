@@ -26,4 +26,5 @@ vite.config.ts.timestamp-*
 # database
 pokemetre.db
 
-src/pokeapi/
+src/lib/pokeapi/
+src/lib/sprites/

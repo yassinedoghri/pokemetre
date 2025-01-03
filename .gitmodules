@@ -1,4 +1,8 @@
 [submodule "src/pokeapi"]
-	path = src/pokeapi
+	path = src/lib/pokeapi
 	url = git@github.com:PokeAPI/pokeapi.git
+	ignore = dirty
+[submodule "src/sprites"]
+	path = src/lib/sprites
+	url = git@github.com:PokeAPI/sprites.git
 	ignore = dirty
