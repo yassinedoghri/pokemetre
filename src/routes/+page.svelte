@@ -11,34 +11,213 @@
   });
 </script>
 
-<div class="text-center">
-  <h1 class="text-4xl font-bold">Pokémètre</h1>
-  <p>Set your height and weight to reveal your Pokémon mate!</p>
-  <p>Adjust your scale to unveil your Pokémon tale!</p>
-  <p>Enter your stats, and see where your Pokémon’s at!</p>
-  <p>With height and weight in sight, find your Pokémon that’s just right!</p>
-  <p>Input your height and weight to find your Poké soulmate!</p>
-  <p>Set your scale and wait, to find your Pokémon fate!</p>
-  <p>Check your weight and your height to find your Pokémon light!</p>
-  <p>Height and weight combined will match your Pokémon kind!</p>
-  <form action="/">
-    <label>
-      Your height (in cm)
-      <input name="height" type="number" value={data.query?.height ?? ""} />
-    </label>
-    <label>
-      Your weight (in KG)
-      <input name="weight" type="number" value={data.query?.weight ?? ""} />
-    </label>
-    <button>Find your Pokémon!</button>
+<header class="flex items-center justify-between p-4">
+  <div class="indicators">
+    <div class="loading"><span class="sr-only">Loading indicator</span></div>
+    <div class="sound"><span class="sr-only">Sound indicator</span></div>
+  </div>
+  <h1 class="text-right text-xl font-bold">Pokémètre</h1>
+</header>
+<main class="px-4">
+  <form>
+    <div class="screen">
+      <div class="steps-indicators">
+        <div class="step"><span class="sr-only">Step 1 - Height</span></div>
+        <div class="step"><span class="sr-only">Step 2 - Weight</span></div>
+      </div>
+      <div class="display-panel flex flex-col p-4">
+        <label>
+          Your height (in cm)
+          <input name="height" type="number" value={data.query?.height ?? ""} />
+        </label>
+        <label>
+          Your weight (in KG)
+          <input name="weight" type="number" value={data.query?.weight ?? ""} />
+        </label>
+        {#if data.success}
+          <p class="font-bold">Your pokepal is {data.pokepal.identifier}</p>
+          <enhanced:img
+            src={imageModules[
+              `/src/lib/sprites/sprites/pokemon/${data.pokepal.id}.png`
+            ].default}
+            alt={data.pokepal.identifier}
+          />
+        {/if}
+      </div>
+      <div class="power-indicator"><span class="sr-only">On</span></div>
+      <div class="speakers"></div>
+    </div>
+    <div class="controls">
+      <div class="numpad">
+        <button type="button">1</button>
+        <button type="button">2</button>
+        <button type="button">3</button>
+        <button type="button">4</button>
+        <button type="button">5</button>
+        <button type="button">6</button>
+        <button type="button">7</button>
+        <button type="button">8</button>
+        <button type="button">9</button>
+        <button type="button">0</button>
+      </div>
+      <div class="d-pad">
+        <button type="button" class="up">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <title>up</title><path d="M12 8L18 14H6L12 8Z"></path></svg
+          >
+        </button>
+        <button type="button" class="down">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <title>down</title><path d="M12 16L6 10H18L12 16Z"></path></svg
+          >
+        </button>
+        <div class="center"></div>
+        <button type="button" class="left">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <title>left</title><path d="M8 12L14 6V18L8 12Z"></path></svg
+          >
+        </button>
+        <button type="button" class="right">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <title>right</title><path d="M16 12L10 18V6L16 12Z"></path></svg
+          >
+        </button>
+      </div>
+      <div class="action-buttons">
+        <input type="reset" class="reset" value="reset" />
+        <button type="submit" class="select">select</button>
+      </div>
+    </div>
   </form>
-  {#if data.success}
-    <p class="font-bold">Your pokepal is {data.pokepal.identifier}</p>
-    <enhanced:img
-      src={imageModules[
-        `/src/lib/sprites/sprites/pokemon/${data.pokepal.id}.png`
-      ].default}
-      alt={data.pokepal.identifier}
-    />
-  {/if}
-</div>
+</main>
+<footer class="mt-auto py-2 text-center text-xs">© Yassine Doghri</footer>
+
+<style>
+  .indicators {
+    @apply flex items-center gap-x-3;
+
+    .loading {
+      @apply aspect-square w-12 rounded-full border-4 border-white bg-blue-400;
+    }
+
+    .sound {
+      @apply aspect-square w-4 rounded-full bg-black;
+    }
+  }
+
+  .screen {
+    @apply relative aspect-[4/3] w-full rounded-md bg-white px-8 pb-12 pt-8;
+
+    .steps-indicators {
+      @apply absolute inset-x-0 top-3 flex items-center justify-center gap-x-2;
+
+      .step {
+        @apply aspect-square w-2 rounded-full bg-black;
+      }
+    }
+
+    .display-panel {
+      @apply h-full bg-zinc-800;
+
+      input {
+        @apply border bg-transparent;
+      }
+    }
+
+    .power-indicator {
+      @apply absolute bottom-4 left-8 aspect-square w-4 rounded-full bg-red-500;
+    }
+
+    .speakers {
+      @apply absolute bottom-5 right-8 h-2 w-16 rounded-full bg-black;
+
+      &::before {
+        @apply absolute bottom-3 h-2 w-16 rounded-full bg-black content-[''];
+      }
+
+      &::after {
+        @apply absolute -bottom-3 h-2 w-16 rounded-full bg-black content-[''];
+      }
+    }
+  }
+
+  .controls {
+    @apply grid grid-cols-2 gap-x-8 gap-y-4 p-4;
+  }
+
+  .numpad {
+    @apply col-span-2 grid grid-cols-5 gap-2 rounded-lg bg-red-900 p-4;
+
+    button {
+      @apply aspect-square rounded bg-blue-500 text-2xl font-bold;
+    }
+  }
+
+  .d-pad {
+    @apply grid h-32 w-32 grid-cols-3 grid-rows-3 rounded-full bg-red-900 p-4;
+
+    > * {
+      @apply bg-black;
+    }
+
+    .up,
+    .down,
+    .center {
+      @apply col-start-2;
+    }
+
+    .left,
+    .right,
+    .center {
+      @apply row-start-2;
+    }
+
+    .up {
+      @apply rounded-t;
+    }
+
+    .down {
+      @apply row-start-3 rounded-b;
+    }
+
+    .left {
+      @apply rounded-l;
+    }
+
+    .right {
+      @apply col-start-3 rounded-r;
+    }
+  }
+
+  .action-buttons {
+    @apply relative grid aspect-square w-28 grid-cols-2 grid-rows-2 place-self-center;
+
+    &::before {
+      @apply absolute bottom-0 left-0 h-full w-14 translate-x-1/2 rotate-45 scale-125 scale-y-[135%] rounded-full bg-red-900 content-[''];
+    }
+
+    .reset {
+      @apply z-10 row-start-2 aspect-square w-full place-self-center rounded-full bg-black;
+    }
+
+    .select {
+      @apply z-10 col-start-2 aspect-square w-full place-self-center rounded-full bg-black;
+    }
+  }
+</style>
