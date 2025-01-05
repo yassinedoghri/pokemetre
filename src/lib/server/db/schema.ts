@@ -1,3 +1,4 @@
+import type { InferSelectModel } from "drizzle-orm";
 import { sqliteTable, int, text, real } from "drizzle-orm/sqlite-core";
 
 export const pokemonsTable = sqliteTable("pokemons", {
@@ -7,3 +8,5 @@ export const pokemonsTable = sqliteTable("pokemons", {
   weight: int().notNull(),
   bmi: real().notNull(),
 });
+
+export type Pokemon = InferSelectModel<typeof pokemonsTable>;

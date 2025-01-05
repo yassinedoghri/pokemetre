@@ -1,7 +1,6 @@
 <script lang="ts">
-  import type { PageData } from "./$types";
-
-  let { data }: { data: PageData } = $props();
+  import { useMachine } from "@xstate/svelte";
+  import { pokemetreMachine } from "./pokemetreMachine";
 
   const imageModules = import.meta.glob("$lib/sprites/sprites/pokemon/*.png", {
     eager: true,
@@ -9,6 +8,8 @@
       enhanced: true,
     },
   });
+
+  const { snapshot, send } = useMachine(pokemetreMachine);
 </script>
 
 <header class="flex items-center justify-between p-4">
@@ -26,22 +27,184 @@
         <div class="step"><span class="sr-only">Step 2 - Weight</span></div>
       </div>
       <div class="display-panel flex flex-col p-4">
-        <label>
-          Your height (in cm)
-          <input name="height" type="number" value={data.query?.height ?? ""} />
-        </label>
-        <label>
-          Your weight (in KG)
-          <input name="weight" type="number" value={data.query?.weight ?? ""} />
-        </label>
-        {#if data.success}
-          <p class="font-bold">Your pokepal is {data.pokepal.identifier}</p>
+        {#if $snapshot.matches("idle")}
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "START" });
+            }}
+          >
+            Start
+          </button>
+        {:else if $snapshot.matches("setHeight")}
+          <label>
+            Your height (in cm)
+            <input
+              name="height"
+              type="number"
+              value={$snapshot.context.height ?? ""}
+              onchange={(event) => {
+                send({
+                  type: "height.UPDATE",
+                  height: event.currentTarget.value,
+                });
+              }}
+            />
+          </label>
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "NEXT" });
+            }}
+          >
+            Next
+          </button>
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "PREV" });
+            }}
+          >
+            Previous
+          </button>
+        {:else if $snapshot.matches("setWeight")}
+          <label>
+            Your weight (in KG)
+            <input
+              name="weight"
+              type="number"
+              value={$snapshot.context.weight ?? ""}
+              onchange={(event) => {
+                send({
+                  type: "weight.UPDATE",
+                  weight: event.currentTarget.value,
+                });
+              }}
+            />
+          </label>
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "NEXT" });
+            }}
+          >
+            Next
+          </button>
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "PREV" });
+            }}
+          >
+            Previous
+          </button>
+        {:else if $snapshot.matches("summary")}
+          Height: {$snapshot.context.height} cm
+          <br />
+          Weight: {$snapshot.context.weight} kg
+          <br />
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "PREV" });
+            }}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "FIND" });
+            }}
+          >
+            FIND!
+          </button>
+        {:else if $snapshot.matches("loadingPokemon")}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            ><g
+              ><circle
+                cx="12"
+                cy="2.5"
+                r="1.5"
+                fill="currentColor"
+                opacity="0.14"
+              /><circle
+                cx="16.75"
+                cy="3.77"
+                r="1.5"
+                fill="currentColor"
+                opacity="0.29"
+              /><circle
+                cx="20.23"
+                cy="7.25"
+                r="1.5"
+                fill="currentColor"
+                opacity="0.43"
+              /><circle
+                cx="21.5"
+                cy="12"
+                r="1.5"
+                fill="currentColor"
+                opacity="0.57"
+              /><circle
+                cx="20.23"
+                cy="16.75"
+                r="1.5"
+                fill="currentColor"
+                opacity="0.71"
+              /><circle
+                cx="16.75"
+                cy="20.23"
+                r="1.5"
+                fill="currentColor"
+                opacity="0.86"
+              /><circle
+                cx="12"
+                cy="21.5"
+                r="1.5"
+                fill="currentColor"
+              /><animateTransform
+                attributeName="transform"
+                calcMode="discrete"
+                dur="0.75s"
+                repeatCount="indefinite"
+                type="rotate"
+                values="0 12 12;30 12 12;60 12 12;90 12 12;120 12 12;150 12 12;180 12 12;210 12 12;240 12 12;270 12 12;300 12 12;330 12 12;360 12 12"
+              /></g
+            ></svg
+          >
+        {:else if $snapshot.matches("failure")}
+          Oops... something weird happened!
+
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "RETRY" });
+            }}
+          >
+            Retry
+          </button>
+        {:else if $snapshot.matches("success") && $snapshot.context.pokemon !== null}
+          Success! Your pokemon is
+          <strong>{$snapshot.context.pokemon.identifier}</strong>
           <enhanced:img
             src={imageModules[
-              `/src/lib/sprites/sprites/pokemon/${data.pokepal.id}.png`
+              `/src/lib/sprites/sprites/pokemon/${$snapshot.context.pokemon.id}.png`
             ].default}
-            alt={data.pokepal.identifier}
+            alt={$snapshot.context.pokemon.identifier}
           />
+          <button
+            type="button"
+            onclick={() => {
+              send({ type: "START_AGAIN" });
+            }}
+          >
+            Start again
+          </button>
         {/if}
       </div>
       <div class="power-indicator"><span class="sr-only">On</span></div>
@@ -108,7 +271,7 @@
 </main>
 <footer class="mt-auto py-2 text-center text-xs">© Yassine Doghri</footer>
 
-<style>
+<style lang="postcss">
   .indicators {
     @apply flex items-center gap-x-3;
 
