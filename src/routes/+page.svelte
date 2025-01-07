@@ -1,15 +1,5 @@
 <script lang="ts">
-  import { useMachine } from "@xstate/svelte";
-  import { pokemetreMachine } from "./pokemetreMachine";
-
-  const imageModules = import.meta.glob("$lib/sprites/sprites/pokemon/*.png", {
-    eager: true,
-    query: {
-      enhanced: true,
-    },
-  });
-
-  const { snapshot, send } = useMachine(pokemetreMachine);
+  import DisplayPanel from "./components/DisplayPanel.svelte";
 </script>
 
 <header class="flex items-center justify-between p-4">
@@ -20,254 +10,72 @@
   <h1 class="text-right text-xl font-bold">Pokémètre</h1>
 </header>
 <main class="px-4">
-  <form>
-    <div class="screen">
-      <div class="steps-indicators">
-        <div class="step"><span class="sr-only">Step 1 - Height</span></div>
-        <div class="step"><span class="sr-only">Step 2 - Weight</span></div>
-      </div>
-      <div class="display-panel flex flex-col p-4">
-        {#if $snapshot.matches("idle")}
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "START" });
-            }}
-          >
-            Start
-          </button>
-        {:else if $snapshot.matches("setHeight")}
-          <label>
-            Your height (in cm)
-            <input
-              name="height"
-              type="number"
-              value={$snapshot.context.height ?? ""}
-              onchange={(event) => {
-                send({
-                  type: "height.UPDATE",
-                  height: event.currentTarget.value,
-                });
-              }}
-            />
-          </label>
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "NEXT" });
-            }}
-          >
-            Next
-          </button>
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "PREV" });
-            }}
-          >
-            Previous
-          </button>
-        {:else if $snapshot.matches("setWeight")}
-          <label>
-            Your weight (in KG)
-            <input
-              name="weight"
-              type="number"
-              value={$snapshot.context.weight ?? ""}
-              onchange={(event) => {
-                send({
-                  type: "weight.UPDATE",
-                  weight: event.currentTarget.value,
-                });
-              }}
-            />
-          </label>
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "NEXT" });
-            }}
-          >
-            Next
-          </button>
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "PREV" });
-            }}
-          >
-            Previous
-          </button>
-        {:else if $snapshot.matches("summary")}
-          Height: {$snapshot.context.height} cm
-          <br />
-          Weight: {$snapshot.context.weight} kg
-          <br />
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "PREV" });
-            }}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "FIND" });
-            }}
-          >
-            FIND!
-          </button>
-        {:else if $snapshot.matches("loadingPokemon")}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            ><g
-              ><circle
-                cx="12"
-                cy="2.5"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.14"
-              /><circle
-                cx="16.75"
-                cy="3.77"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.29"
-              /><circle
-                cx="20.23"
-                cy="7.25"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.43"
-              /><circle
-                cx="21.5"
-                cy="12"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.57"
-              /><circle
-                cx="20.23"
-                cy="16.75"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.71"
-              /><circle
-                cx="16.75"
-                cy="20.23"
-                r="1.5"
-                fill="currentColor"
-                opacity="0.86"
-              /><circle
-                cx="12"
-                cy="21.5"
-                r="1.5"
-                fill="currentColor"
-              /><animateTransform
-                attributeName="transform"
-                calcMode="discrete"
-                dur="0.75s"
-                repeatCount="indefinite"
-                type="rotate"
-                values="0 12 12;30 12 12;60 12 12;90 12 12;120 12 12;150 12 12;180 12 12;210 12 12;240 12 12;270 12 12;300 12 12;330 12 12;360 12 12"
-              /></g
-            ></svg
-          >
-        {:else if $snapshot.matches("failure")}
-          Oops... something weird happened!
-
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "RETRY" });
-            }}
-          >
-            Retry
-          </button>
-        {:else if $snapshot.matches("success") && $snapshot.context.pokemon !== null}
-          Success! Your pokemon is
-          <strong>{$snapshot.context.pokemon.identifier}</strong>
-          <enhanced:img
-            src={imageModules[
-              `/src/lib/sprites/sprites/pokemon/${$snapshot.context.pokemon.id}.png`
-            ].default}
-            alt={$snapshot.context.pokemon.identifier}
-          />
-          <button
-            type="button"
-            onclick={() => {
-              send({ type: "START_AGAIN" });
-            }}
-          >
-            Start again
-          </button>
-        {/if}
-      </div>
-      <div class="power-indicator"><span class="sr-only">On</span></div>
-      <div class="speakers"></div>
+  <div class="screen" id="screen">
+    <div class="steps-indicators">
+      <div class="step"><span class="sr-only">Step 1 - Height</span></div>
+      <div class="step"><span class="sr-only">Step 2 - Weight</span></div>
     </div>
-    <div class="controls">
-      <div class="numpad">
-        <button type="button">1</button>
-        <button type="button">2</button>
-        <button type="button">3</button>
-        <button type="button">4</button>
-        <button type="button">5</button>
-        <button type="button">6</button>
-        <button type="button">7</button>
-        <button type="button">8</button>
-        <button type="button">9</button>
-        <button type="button">0</button>
-      </div>
-      <div class="d-pad">
-        <button type="button" class="up">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <title>up</title><path d="M12 8L18 14H6L12 8Z"></path></svg
-          >
-        </button>
-        <button type="button" class="down">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <title>down</title><path d="M12 16L6 10H18L12 16Z"></path></svg
-          >
-        </button>
-        <div class="center"></div>
-        <button type="button" class="left">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <title>left</title><path d="M8 12L14 6V18L8 12Z"></path></svg
-          >
-        </button>
-        <button type="button" class="right">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-          >
-            <title>right</title><path d="M16 12L10 18V6L16 12Z"></path></svg
-          >
-        </button>
-      </div>
-      <div class="action-buttons">
-        <input type="reset" class="reset" value="reset" />
-        <button type="submit" class="select">select</button>
-      </div>
+    <DisplayPanel />
+    <div class="power-indicator"><span class="sr-only">On</span></div>
+    <div class="speakers"></div>
+  </div>
+  <div class="controls">
+    <div class="numpad">
+      <button type="button">1</button>
+      <button type="button">2</button>
+      <button type="button">3</button>
+      <button type="button">4</button>
+      <button type="button">5</button>
+      <button type="button">6</button>
+      <button type="button">7</button>
+      <button type="button">8</button>
+      <button type="button">9</button>
+      <button type="button">0</button>
     </div>
-  </form>
+    <div class="d-pad">
+      <button type="button" class="up">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <title>up</title><path d="M12 8L18 14H6L12 8Z"></path></svg
+        >
+      </button>
+      <button type="button" class="left">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <title>left</title><path d="M8 12L14 6V18L8 12Z"></path></svg
+        >
+      </button>
+      <div class="center"></div>
+      <button type="button" class="down">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <title>down</title><path d="M12 16L6 10H18L12 16Z"></path></svg
+        >
+      </button>
+      <button type="button" class="right">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <title>right</title><path d="M16 12L10 18V6L16 12Z"></path></svg
+        >
+      </button>
+    </div>
+    <div class="action-buttons">
+      <button type="button" class="select">select</button>
+      <input type="reset" class="reset" value="reset" />
+    </div>
+  </div>
 </main>
 <footer class="mt-auto py-2 text-center text-xs">© Yassine Doghri</footer>
 
@@ -292,14 +100,6 @@
 
       .step {
         @apply aspect-square w-2 rounded-full bg-black;
-      }
-    }
-
-    .display-panel {
-      @apply h-full bg-zinc-800;
-
-      input {
-        @apply border bg-transparent;
       }
     }
 

@@ -13,11 +13,11 @@ export const GET: RequestHandler = async ({ url }) => {
   const weight = weightSchema.safeParse(url.searchParams.get("weight") ?? null);
 
   if (!height.success) {
-    return error(400, { message: height.error.message });
+    return error(400, { message: height.error.issues[0].message });
   }
 
   if (!weight.success) {
-    return error(400, { message: weight.error.message });
+    return error(400, { message: weight.error.issues[0].message });
   }
 
   const heightInMetres = height.data / 100;

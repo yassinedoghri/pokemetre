@@ -1,6 +1,11 @@
 import type { Pokemon } from "$lib/server/db/schema";
 import { assign, fromPromise, setup } from "xstate";
 
+export interface ResponseError extends Error {
+  status: number;
+  statusText: string;
+}
+
 export const fetchPokemon = (height: string, weight: string) =>
   fetch(`/?height=${height}&weight=${weight}`, {
     method: "GET",
@@ -8,8 +13,23 @@ export const fetchPokemon = (height: string, weight: string) =>
       Accept: "application/json",
     },
   })
-    .then((response) => response.json())
-    .then((response) => response);
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+
+      return Promise.reject(response);
+    })
+    .then((responseJson) => responseJson)
+    .catch(async (response) => {
+      const error = await response.json();
+
+      const responseError = new Error(error.message) as ResponseError;
+      responseError.status = response.status;
+      responseError.statusText = response.statusText;
+
+      throw responseError;
+    });
 
 export const pokemetreMachine = setup({
   types: {
@@ -25,7 +45,7 @@ export const pokemetreMachine = setup({
       | { type: "PREV" }
       | { type: "FIND" }
       | { type: "RETRY" }
-      | { type: "START_AGAIN" }
+      | { type: "HOME" }
       | { type: "height.UPDATE"; height: string }
       | { type: "weight.UPDATE"; weight: string },
   },
@@ -40,7 +60,7 @@ export const pokemetreMachine = setup({
   },
 }).createMachine({
   id: "pokemetre",
-  initial: "idle",
+  initial: "home",
   context: {
     height: "",
     weight: "",
@@ -48,23 +68,23 @@ export const pokemetreMachine = setup({
     error: null,
   },
   states: {
-    idle: {
+    home: {
       on: {
-        START: "setHeight",
+        START: "settingHeight",
       },
     },
-    setHeight: {
+    settingHeight: {
       on: {
         "height.UPDATE": {
           actions: assign({
             height: ({ event }) => event.height,
           }),
         },
-        NEXT: "setWeight",
-        PREV: "idle",
+        NEXT: "settingWeight",
+        PREV: "home",
       },
     },
-    setWeight: {
+    settingWeight: {
       on: {
         "weight.UPDATE": {
           actions: assign({
@@ -72,12 +92,12 @@ export const pokemetreMachine = setup({
           }),
         },
         NEXT: "summary",
-        PREV: "setHeight",
+        PREV: "settingHeight",
       },
     },
     summary: {
       on: {
-        PREV: "setWeight",
+        PREV: "settingWeight",
         FIND: "loadingPokemon",
       },
     },
@@ -100,12 +120,12 @@ export const pokemetreMachine = setup({
     },
     failure: {
       on: {
-        RETRY: { target: "loadingPokemon" },
+        RETRY: { target: "settingHeight" },
       },
     },
     success: {
       on: {
-        START_AGAIN: "setHeight",
+        HOME: "home",
       },
     },
   },
