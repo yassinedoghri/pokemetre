@@ -24,5 +24,5 @@
       .default}
     alt={pokemon.identifier}
   /> -->
-  <button tabindex={0} type="button" onclick={onHome}> Home </button>
+  <button data-active-index="0" type="button" onclick={onHome}> Home </button>
 </div>

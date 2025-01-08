@@ -9,5 +9,5 @@
 </script>
 
 <div class="grid h-full place-items-center">
-  <button tabindex={0} type="button" onclick={onStart}>Start</button>
+  <button data-active-index="0" type="button" onclick={onStart}>Start</button>
 </div>

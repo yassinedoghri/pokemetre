@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+button[data-is-active] {
+  @apply bg-white text-black;
+}

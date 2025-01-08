@@ -16,5 +16,5 @@
   <p>{error.status}: {error.statusText}</p>
   <p>{error.message}</p>
 
-  <button tabindex={0} type="button" onclick={onRetry}> Retry </button>
+  <button data-active-index="0" type="button" onclick={onRetry}> Retry </button>
 </div>

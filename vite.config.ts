@@ -8,6 +8,7 @@ export default defineConfig({
     watch: {
       ignored: ["**/pokeapi/**", "**/sprites/**"],
     },
+    host: true,
   },
 
   test: {
