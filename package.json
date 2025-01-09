@@ -22,7 +22,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "commit": "cz",
-    "prepare": "husky && prettier --write pnpm-lock.yaml"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@fast-csv/parse": "^5.0.2",
@@ -39,6 +39,7 @@
     "@eslint/compat": "^1.2.4",
     "@eslint/js": "^9.17.0",
     "@sveltejs/adapter-auto": "^3.3.1",
+    "@sveltejs/adapter-node": "^5.2.11",
     "@sveltejs/enhanced-img": "^0.4.4",
     "@sveltejs/kit": "^2.15.1",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",

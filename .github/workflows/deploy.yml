@@ -1,0 +1,92 @@
+name: Pokémètre deployment
+on:
+  push:
+
+env:
+  HUSKY: 0
+
+jobs:
+  quality:
+    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        node-version: [22]
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: ⚙️ Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: 📥 Install dependencies
+        run: pnpm install
+
+      - name: ✨ Quality check
+        run: pnpm run lint
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    needs: [quality]
+    strategy:
+      matrix:
+        node-version: [22]
+    steps:
+      - name: 🛎️ Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: "true"
+
+      - name: 📥 Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: ⚙️ Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "pnpm"
+
+      - name: 📥 Install dependencies
+        run: |
+          echo "node-linker=hoisted" >> .npmrc
+          pnpm install
+
+      - name: 📦 Build Pokémètre
+        run: |
+          pnpm run build
+          DB_FILE_NAME="file:./build/pokemetre.db" pnpm run db:init
+
+      - name: ✨ Prepare production dependencies
+        run: pnpm install --prod
+
+      - name: 🚀 Deploy Build
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr --delete
+          path: build/
+          remote_path: ${{ secrets.DEPLOY_PATH }}
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_port: ${{ secrets.DEPLOY_PORT }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: 🚀 Deploy production dependencies
+        uses: burnett01/rsync-deployments@7.0.1
+        with:
+          switches: -avzr
+          path: node_modules/
+          remote_path: ${{ secrets.DEPLOY_PATH }}node_modules/
+          remote_host: ${{ secrets.DEPLOY_HOST }}
+          remote_port: ${{ secrets.DEPLOY_PORT }}
+          remote_user: ${{ secrets.DEPLOY_USER }}
+          remote_key: ${{ secrets.DEPLOY_KEY }}
