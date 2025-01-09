@@ -1,5 +1,13 @@
 import type { Pokemon } from "$lib/server/db/schema";
-import { assign, fromPromise, setup } from "xstate";
+import type { Readable } from "svelte/store";
+import {
+  assign,
+  fromPromise,
+  setup,
+  type ActorRefFrom,
+  type EventFrom,
+  type SnapshotFrom,
+} from "xstate";
 
 export interface ResponseError extends Error {
   status: number;
@@ -43,6 +51,8 @@ export const pokemetreMachine = setup({
       | { type: "START" }
       | { type: "NEXT" }
       | { type: "PREV" }
+      | { type: "EDIT_HEIGHT" }
+      | { type: "EDIT_WEIGHT" }
       | { type: "FIND" }
       | { type: "RETRY" }
       | { type: "HOME" }
@@ -53,6 +63,9 @@ export const pokemetreMachine = setup({
     fetchPokemon: fromPromise<unknown, { height: string; weight: string }>(
       async ({ input }) => {
         const pokemon = await fetchPokemon(input.height, input.weight);
+
+        // TODO: keep this 1s delay?
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         return pokemon;
       }
@@ -77,7 +90,7 @@ export const pokemetreMachine = setup({
       on: {
         "height.UPDATE": {
           actions: assign({
-            height: ({ event }) => event.height,
+            height: ({ event }) => Number(event.height).toString(),
           }),
         },
         NEXT: "settingWeight",
@@ -88,7 +101,7 @@ export const pokemetreMachine = setup({
       on: {
         "weight.UPDATE": {
           actions: assign({
-            weight: ({ event }) => event.weight,
+            weight: ({ event }) => Number(event.weight).toString(),
           }),
         },
         NEXT: "summary",
@@ -97,7 +110,8 @@ export const pokemetreMachine = setup({
     },
     summary: {
       on: {
-        PREV: "settingWeight",
+        EDIT_HEIGHT: "settingHeight",
+        EDIT_WEIGHT: "settingWeight",
         FIND: "loadingPokemon",
       },
     },
@@ -130,3 +144,9 @@ export const pokemetreMachine = setup({
     },
   },
 });
+
+export type PokemetreMachine = {
+  snapshot: Readable<SnapshotFrom<typeof pokemetreMachine>>;
+  send: (event: EventFrom<typeof pokemetreMachine>) => void;
+  actorRef: ActorRefFrom<typeof pokemetreMachine>;
+};

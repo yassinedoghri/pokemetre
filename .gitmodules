@@ -6,3 +6,6 @@
 	path = src/lib/sprites
 	url = git@github.com:PokeAPI/sprites.git
 	ignore = dirty
+[submodule "src/lib/cries"]
+	path = src/lib/cries
+	url = git@github.com:PokeAPI/cries.git

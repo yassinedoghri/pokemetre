@@ -21,7 +21,7 @@ export const handleScreenAction: KeyboardEventHandler<Window> = (event) => {
       break;
     case "Backspace":
     case "Delete":
-      clearInput();
+      removeLastNumberFromInput();
       break;
     case "1":
       addNumberToInput(1);
@@ -82,6 +82,10 @@ export const getCurrentActiveElement = (): HTMLElement | null => {
   const activeElement = document.querySelector(
     `#display-panel [data-is-active]`
   ) as HTMLElement | null;
+
+  if (!activeElement) {
+    initActiveElement();
+  }
 
   return activeElement;
 };
@@ -154,16 +158,20 @@ export const addNumberToInput = (number: number) => {
   const onScreenInput = getOnScreenInput();
 
   if (onScreenInput) {
-    onScreenInput.value += number;
+    const newValue = onScreenInput.value + number;
+    onScreenInput.value = Math.min(
+      parseInt(onScreenInput.max),
+      parseInt(newValue)
+    ).toString();
     onScreenInput.dispatchEvent(new Event("input", { bubbles: true }));
   }
 };
 
-export const clearInput = () => {
+export const removeLastNumberFromInput = () => {
   const onScreenInput = getOnScreenInput();
 
   if (onScreenInput) {
-    onScreenInput.value = "";
+    onScreenInput.value = onScreenInput.value.slice(0, -1);
     onScreenInput.dispatchEvent(new Event("input", { bubbles: true }));
   }
 };

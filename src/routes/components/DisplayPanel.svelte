@@ -5,11 +5,16 @@
   import FailureScreen from "./FailureScreen.svelte";
   import SuccessScreen from "./SuccessScreen.svelte";
   import HomeScreen from "./HomeScreen.svelte";
-  import { useMachine } from "@xstate/svelte";
-  import { pokemetreMachine } from "../pokemetreMachine";
   import { initActiveElement, handleScreenAction } from "./ui-actions";
+  import type { PokemetreMachine } from "../pokemetreMachine";
 
-  const { snapshot, send } = useMachine(pokemetreMachine);
+  interface Props {
+    machine: PokemetreMachine;
+  }
+
+  const { machine }: Props = $props();
+
+  const { snapshot, send } = machine;
 
   let prevScreenState = $state("home");
   snapshot.subscribe((snapshot) => {
@@ -27,7 +32,7 @@
 
 <svelte:window onkeydown={handleScreenAction} />
 
-<div class="h-full bg-zinc-800 p-4" id="display-panel">
+<div class="h-full p-4 font-display" id="display-panel">
   {#if $snapshot.matches("home")}
     <HomeScreen
       onStart={() => {
@@ -36,6 +41,7 @@
     />
   {:else if $snapshot.matches("settingHeight")}
     <InputScreen
+      step={1}
       name="height"
       label="Your height (in cm)"
       defaultValue={$snapshot.context.height ?? ""}
@@ -54,8 +60,9 @@
     />
   {:else if $snapshot.matches("settingWeight")}
     <InputScreen
+      step={2}
       name="weight"
-      label="Your weight (in KG)"
+      label="Your weight (in kg)"
       defaultValue={$snapshot.context.weight ?? ""}
       onInput={(event) => {
         send({
@@ -74,8 +81,11 @@
     <SummaryScreen
       height={$snapshot.context.height}
       weight={$snapshot.context.weight}
-      onPrev={() => {
-        send({ type: "PREV" });
+      onEditHeight={() => {
+        send({ type: "EDIT_HEIGHT" });
+      }}
+      onEditWeight={() => {
+        send({ type: "EDIT_WEIGHT" });
       }}
       onFind={() => {
         send({ type: "FIND" });
@@ -99,3 +109,19 @@
     />
   {/if}
 </div>
+
+<style lang="postcss">
+  #display-panel {
+    @apply mix-blend-multiply;
+
+    background-size: 4px 4px;
+    background-image: linear-gradient(
+      to bottom,
+      theme(colors.black / 5%) 1px,
+      transparent 1px
+    );
+    box-shadow:
+      inset 0 3px 0 0 theme(colors.black / 0.25),
+      inset 0 -3px 0 0 theme(colors.white);
+  }
+</style>

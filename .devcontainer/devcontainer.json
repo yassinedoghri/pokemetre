@@ -33,7 +33,8 @@
         "DavidAnson.vscode-markdownlint",
         "Gruntfuggly.todo-tree",
         "stylelint.vscode-stylelint",
-        "qwtel.sqlite-viewer"
+        "qwtel.sqlite-viewer",
+        "jock.svg"
       ]
     }
   }

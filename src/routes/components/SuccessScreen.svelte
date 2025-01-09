@@ -9,20 +9,28 @@
 
   let { pokemon, onHome }: Props = $props();
 
-  // const imageModules = import.meta.glob("$lib/sprites/sprites/pokemon/*.png", {
-  //   eager: true,
-  //   query: {
-  //     enhanced: true,
-  //   },
-  // });
+  // set volume to 0.1 so that people don't get a heart attack.
+  // I almost died.
+  let pokemonCryAudioVolume = $state(0.1);
 </script>
 
-<div class="">
-  Success! Your pokemon is <strong>{pokemon.identifier}</strong>
-  <!-- <enhanced:img
-    src={imageModules[`/src/lib/sprites/sprites/pokemon/${pokemon.id}.png`]
-      .default}
+<div class="grid h-full grid-cols-2 grid-rows-3">
+  <h1 class="text-lg">
+    Your Pokémon is <strong>{pokemon.identifier}</strong>!
+  </h1>
+  <img
+    src={`/images/pokemons/${pokemon.id}.png`}
     alt={pokemon.identifier}
-  /> -->
-  <button data-active-index="0" type="button" onclick={onHome}> Home </button>
+    class="col-start-2 row-span-3 h-full mix-blend-overlay transition-all hover:mix-blend-normal"
+  />
+  <button
+    data-active-index="0"
+    type="button"
+    class="row-start-3 mt-auto"
+    onclick={onHome}>Home</button
+  >
 </div>
+
+<audio autoplay bind:volume={pokemonCryAudioVolume}>
+  <source src={`/audio/pokemons/${pokemon.id}.ogg`} type="audio/ogg" />
+</audio>

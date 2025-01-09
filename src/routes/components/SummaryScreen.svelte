@@ -5,27 +5,66 @@
     height: string;
     weight: string;
     onFind: MouseEventHandler<HTMLButtonElement>;
-    onPrev: MouseEventHandler<HTMLButtonElement>;
+    onEditHeight: MouseEventHandler<HTMLButtonElement>;
+    onEditWeight: MouseEventHandler<HTMLButtonElement>;
   }
 
-  let { height, weight, onPrev, onFind }: Props = $props();
+  let { height, weight, onEditHeight, onEditWeight, onFind }: Props = $props();
 </script>
 
-<div class="flex h-full flex-col">
-  <button
-    data-active-index="-1"
-    type="button"
-    class="self-start"
-    onclick={onPrev}>Previous</button
-  >
-  <div class="grid flex-1">
-    <dl class="grid grid-cols-2 gap-x-4 gap-y-2 place-self-center">
-      <dt>Height</dt>
-      <dd class="font-bold">{height === "" ? "N/A" : height} cm</dd>
+<div class="grid h-full grid-cols-2">
+  <div class="col-span-2 place-self-center">
+    <dl class="grid grid-cols-3 gap-x-1 gap-y-4 place-self-center">
+      <dt class="inline text-right">Height</dt>
+      <dd class="col-span-2 text-right font-bold">
+        <span class="inline-block w-[7ch] font-display-mono"
+          >{height === "" ? "0" : height} cm</span
+        ><button
+          data-active-index="-2"
+          onclick={onEditHeight}
+          class="ml-2 !p-0 align-middle"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            ><title>Edit height</title><path
+              fill="currentColor"
+              d="M18 2h-2v2h2zM4 4h6v2H4v14h14v-6h2v8H2V4zm4 8H6v6h6v-2h2v-2h-2v2H8zm4-2h-2v2H8v-2h2V8h2V6h2v2h-2zm2-6h2v2h-2zm4 0h2v2h2v2h-2v2h-2v2h-2v-2h2V8h2V6h-2zm-4 8h2v2h-2z"
+            /></svg
+          >
+        </button>
+      </dd>
 
-      <dt>Weight</dt>
-      <dd class="font-bold">{weight === "" ? "N/A" : weight} KG</dd>
+      <dt class="text-right">Weight</dt>
+      <dd class="col-span-2 text-right font-bold">
+        <span class="inline-block w-[7ch] font-display-mono"
+          >{weight === "" ? "0" : weight} kg</span
+        ><button
+          data-active-index="-1"
+          onclick={onEditWeight}
+          class="ml-2 !p-0 align-middle"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            ><title>Edit weight</title>
+            <path
+              fill="currentColor"
+              d="M18 2h-2v2h2zM4 4h6v2H4v14h14v-6h2v8H2V4zm4 8H6v6h6v-2h2v-2h-2v2H8zm4-2h-2v2H8v-2h2V8h2V6h2v2h-2zm2-6h2v2h-2zm4 0h2v2h2v2h-2v2h-2v2h-2v-2h2V8h2V6h-2zm-4 8h2v2h-2z"
+            /></svg
+          ></button
+        >
+      </dd>
     </dl>
   </div>
-  <button data-active-index="0" type="button" onclick={onFind}>FIND</button>
+  <button
+    data-active-index="0"
+    type="button"
+    class="col-span-2 place-self-center"
+    onclick={onFind}>Find my Pokémon!</button
+  >
 </div>

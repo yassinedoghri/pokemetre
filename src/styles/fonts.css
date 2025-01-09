@@ -1,0 +1,39 @@
+@layer base {
+  @font-face {
+    font-family: "Space Grotesk";
+    font-display: swap;
+    src: url("/fonts/space-grotesk.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Space Mono";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/space-mono-regular.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Space Mono";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/space-mono-bold.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Atkinson Hyperlegible";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/atkinson-hyperlegible-regular.woff2") format("woff2");
+  }
+
+  @font-face {
+    font-family: "Atkinson Hyperlegible";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/atkinson-hyperlegible-bold.woff2") format("woff2");
+  }
+}

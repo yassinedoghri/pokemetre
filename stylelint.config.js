@@ -5,8 +5,15 @@ export default {
     "at-rule-no-unknown": [
       true,
       {
-        ignoreAtRules: ["tailwind", "apply"],
+        ignoreAtRules: [
+          "tailwind",
+          "apply",
+          "variants",
+          "responsive",
+          "screen",
+        ],
       },
     ],
+    "function-no-unknown": [true, { ignoreFunctions: ["theme"] }],
   },
 };

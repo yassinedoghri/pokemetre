@@ -1,73 +1,95 @@
 <script lang="ts">
-  import ActionButtons from "./components/ActionButtons.svelte";
-  import DisplayPanel from "./components/DisplayPanel.svelte";
-  import DPad from "./components/DPad.svelte";
-  import NumPad from "./components/NumPad.svelte";
+  import { useMachine } from "@xstate/svelte";
+  import Controls from "./components/Controls.svelte";
+  import ScreenBase from "./components/ScreenBase.svelte";
+  import { pokemetreMachine } from "./pokemetreMachine";
+  import "../styles/app.css";
+
+  const machine = useMachine(pokemetreMachine);
 </script>
 
-<header class="flex items-center justify-between p-4">
-  <div class="indicators">
-    <div class="loading"><span class="sr-only">Loading indicator</span></div>
-    <div class="sound"><span class="sr-only">Sound indicator</span></div>
-  </div>
-  <h1 class="text-right text-xl font-bold">Pokémètre</h1>
-</header>
-<main class="px-4">
-  <div class="screen">
-    <div class="steps-indicators">
-      <div class="step"><span class="sr-only">Step 1 - Height</span></div>
-      <div class="step"><span class="sr-only">Step 2 - Weight</span></div>
+<div
+  id="pokemetre"
+  class="flex h-full w-full max-w-sm flex-col bg-red-800 text-white xs:h-[inherit] xs:max-h-[700px] xs:rounded-3xl xs:shadow-2xl"
+>
+  <header class="flex items-center justify-between p-4">
+    <div class="indicators">
+      <div class="loader">
+        <span class="sr-only">Loading indicator</span>
+        <span class="loader-bulb"></span>
+        <span class="loader-base"></span>
+      </div>
+      <div class="sound"><span class="sr-only">Sound indicator</span></div>
     </div>
-    <DisplayPanel />
-    <div class="power-indicator"><span class="sr-only">On</span></div>
-    <div class="speakers"></div>
-  </div>
-  <div class="grid grid-cols-2 gap-x-8 gap-y-4 p-4">
-    <NumPad />
-    <DPad />
-    <ActionButtons />
-  </div>
-</main>
-<footer class="mt-auto py-2 text-center text-xs">© Yassine Doghri</footer>
+    <h1 class="text-right text-xl font-bold text-red-950">Pokémètre</h1>
+  </header>
+  <main class="px-4">
+    <ScreenBase {machine} />
+    <Controls />
+  </main>
+  <footer class="mt-auto px-8 py-2 text-right text-xs text-red-950">
+    © Yassine Doghri
+  </footer>
+</div>
 
 <style lang="postcss">
+  #pokemetre {
+    @apply bg-blend-multiply;
+
+    background-image: url("./images/noise.svg");
+  }
+
   .indicators {
     @apply flex items-center gap-x-3;
 
-    .loading {
-      @apply aspect-square w-12 rounded-full border-4 border-white bg-blue-400;
-    }
+    .loader {
+      @apply relative aspect-square w-12 p-1;
 
-    .sound {
-      @apply aspect-square w-4 rounded-full bg-black;
-    }
-  }
+      .loader-base {
+        @apply absolute left-0 top-0 z-20 h-full w-full -translate-y-0.5 rounded-full bg-red-50;
 
-  .screen {
-    @apply relative aspect-[4/3] w-full rounded-md bg-white px-8 pb-12 pt-8;
-
-    .steps-indicators {
-      @apply absolute inset-x-0 top-3 flex items-center justify-center gap-x-2;
-
-      .step {
-        @apply aspect-square w-2 rounded-full bg-black;
-      }
-    }
-
-    .power-indicator {
-      @apply absolute bottom-4 left-8 aspect-square w-4 rounded-full bg-red-500;
-    }
-
-    .speakers {
-      @apply absolute bottom-5 right-8 h-2 w-16 rounded-full bg-black;
-
-      &::before {
-        @apply absolute bottom-3 h-2 w-16 rounded-full bg-black content-[''];
+        box-shadow:
+          inset 0 1px 0 0 theme(colors.white),
+          inset 0 -1px 0 0 theme(colors.black / 0.05);
       }
 
       &::after {
-        @apply absolute -bottom-3 h-2 w-16 rounded-full bg-black content-[''];
+        @apply absolute left-0 top-0 z-10 h-full w-full rounded-full content-[''];
+
+        background: linear-gradient(
+          to left,
+          theme(colors.stone.500) 0%,
+          theme(colors.red.100) 20%,
+          theme(colors.red.100) 80%,
+          theme(colors.stone.500) 100%
+        );
       }
+
+      &::before {
+        @apply absolute left-0 top-0 z-0 h-full w-full translate-y-0.5 rounded-full bg-red-900 content-[''];
+      }
+
+      .loader-bulb {
+        @apply relative z-30 block h-full w-full -translate-y-0.5 rounded-full bg-blue-300;
+
+        box-shadow:
+          inset 0 -9px 4px -6px theme(colors.blue.600 / 35%),
+          inset 4px 3px 0 0 theme(colors.blue.300),
+          inset -2px 5px 0 0 theme(colors.blue.300),
+          inset 3px 9px 0 0 theme(colors.white / 40%),
+          0 1px 2px 0 theme(colors.black / 20%);
+      }
+    }
+
+    .sound {
+      @apply aspect-square w-4 rounded-full bg-green-400;
+
+      box-shadow:
+        inset 0 -10px 10px -8px theme(colors.green.600),
+        inset 3px 1px 0 0 theme(colors.green.400),
+        inset -1px 3px 0 0 theme(colors.green.400),
+        inset 3px 5px 0 0 theme(colors.white / 40%),
+        0 0 10px 0 theme(colors.green.300 / 75%);
     }
   }
 </style>

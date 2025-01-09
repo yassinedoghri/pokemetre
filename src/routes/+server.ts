@@ -5,12 +5,12 @@ import db from "$lib/server/db";
 import { pokemonsTable } from "$lib/server/db/schema";
 import { sql } from "drizzle-orm";
 
-const heightSchema = z.coerce.number().positive();
-const weightSchema = z.coerce.number().positive();
+const heightSchema = z.coerce.number().nonnegative();
+const weightSchema = z.coerce.number().nonnegative();
 
 export const GET: RequestHandler = async ({ url }) => {
-  const height = heightSchema.safeParse(url.searchParams.get("height") ?? null);
-  const weight = weightSchema.safeParse(url.searchParams.get("weight") ?? null);
+  const height = heightSchema.safeParse(url.searchParams.get("height") ?? 0);
+  const weight = weightSchema.safeParse(url.searchParams.get("weight") ?? 0);
 
   if (!height.success) {
     return error(400, { message: height.error.issues[0].message });
@@ -21,7 +21,11 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 
   const heightInMetres = height.data / 100;
-  const trainerBMI = weight.data / (heightInMetres * heightInMetres);
+  let trainerBMI = weight.data / (heightInMetres * heightInMetres);
+
+  if (!isFinite(trainerBMI)) {
+    trainerBMI = 0;
+  }
 
   const pokemon = await db
     .select()

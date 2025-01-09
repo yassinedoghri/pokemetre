@@ -1,0 +1,11 @@
+#display-panel {
+  @apply bg-screen text-screen-contrast;
+
+  button {
+    @apply h-fit w-fit border-2 border-dotted border-screen-contrast px-4 font-bold;
+  }
+}
+
+button[data-is-active] {
+  @apply bg-screen-contrast text-screen;
+}
