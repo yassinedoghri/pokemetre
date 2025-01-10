@@ -8,6 +8,7 @@ env:
 jobs:
   quality:
     runs-on: ubuntu-22.04
+    if: github.ref != 'refs/heads/main'
     strategy:
       matrix:
         node-version: [22]
@@ -35,7 +36,6 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
-    needs: [quality]
     strategy:
       matrix:
         node-version: [22]
@@ -60,6 +60,9 @@ jobs:
         run: |
           echo "node-linker=hoisted" >> .npmrc
           pnpm install
+
+      - name: ✨ Quality check
+        run: pnpm run lint
 
       - name: 📦 Build Pokémètre
         run: |

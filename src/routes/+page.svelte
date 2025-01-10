@@ -36,7 +36,7 @@
   #pokemetre {
     @apply bg-blend-multiply;
 
-    background-image: url("./images/noise.svg");
+    background-image: url("/images/noise.svg");
   }
 
   .indicators {
