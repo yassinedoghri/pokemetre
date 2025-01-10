@@ -5,6 +5,7 @@
   import { pokemetreMachine } from "./pokemetreMachine";
   import "../styles/app.css";
   import { page } from "$app/state";
+  import SvelteSeo from "svelte-seo";
 
   const defaultHeight = page.url.searchParams.get("height");
   const defaultWeight = page.url.searchParams.get("weight");
@@ -16,6 +17,27 @@
     },
   });
 </script>
+
+<SvelteSeo
+  title="Pokémètre"
+  description="Pokémètre is a console that matches you with one of the 1300+ Pokémon known to existence."
+  canonical="https://pokemetre.yassinedoghri.com/"
+  openGraph={{
+    images: [
+      {
+        url: "https://pokemetre.yassinedoghri.com/images/pokemetre-og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Huge Pokémètre logo on the left with a Pokémètre device displaying a pixelated surprised Pikachu face on the right.",
+      },
+    ],
+    site_name: "Pokémètre",
+  }}
+  twitter={{
+    card: "summary_large_image",
+    creator: "@yassinedoghri",
+  }}
+/>
 
 <div
   id="pokemetre"

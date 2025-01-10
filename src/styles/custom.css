@@ -1,3 +1,7 @@
+body {
+  background: radial-gradient(theme(colors.stone.900), theme(colors.stone.950));
+}
+
 #display-panel {
   @apply bg-screen text-screen-contrast;
 

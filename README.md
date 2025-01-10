@@ -1,10 +1,34 @@
-# Pokémetre
+# Pokémètre
 
-Set your height and weight to reveal your Pokémon mate!  
-Adjust your scale to unveil your Pokémon tale!  
-Enter your stats, and see where your Pokémon’s at!  
-With height and weight in sight, find your Pokémon that’s just right!  
-Input your height and weight to find your Poké soulmate!  
-Set your scale and wait, to find your Pokémon fate!  
-Check your weight and your height to find your Pokémon light!  
-Height and weight combined will match your Pokémon kind!
+Pokémètre is a console that matches you with one of the 1300+ Pokémon known to
+existence.
+
+This state of the art console uses advanced algorithms to find the perfect
+Pokémon for you: input your height and weight, and let Pokémètre's cutting-edge
+technology do the rest!
+
+## Context
+
+Pokémètre is a personal project developed during
+[SvelteHack 2024](https://hack.sveltesociety.dev/2024) and using
+[PokéAPI](https://pokeapi.co/) data.
+
+Pokémètre was created for fun, and to try out new tools:
+
+- 🚀 Svelte 5 w/ SvelteKit
+- ✨ TypeScript
+- 🗄️ Sqlite3 w/ Drizzle ORM
+- 🔀 XState
+- 💅 Tailwind CSS
+
+What I have learned in practice:
+
+- Svelte Runes
+- Finite State Machines (FSM) using xState
+- Styling and animating complex components (ie. DPad, display screen)
+
+## License
+
+[GNU Affero General Public License v3.0](https://choosealicense.com/licenses/agpl-3.0/)
+
+Made with ❤️ by [Yassine Doghri](https://yassinedoghri.com/).
