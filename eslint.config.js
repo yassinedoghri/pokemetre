@@ -31,5 +31,12 @@ export default ts.config(
       },
     },
   },
-  { ignores: ["src/lib/pokeapi/**", "src/lib/sprites/**", "src/lib/cries/**"] }
+  {
+    ignores: [
+      "build/**",
+      "src/lib/pokeapi/**",
+      "src/lib/sprites/**",
+      "src/lib/cries/**",
+    ],
+  }
 );

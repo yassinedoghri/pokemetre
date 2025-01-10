@@ -2,6 +2,7 @@ import { defineConfig } from "vitest/config";
 import { enhancedImages } from "@sveltejs/enhanced-img";
 import { sveltekit } from "@sveltejs/kit/vite";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { SvelteKitPWA } from "@vite-pwa/sveltekit";
 
 export default defineConfig({
   plugins: [
@@ -19,6 +20,7 @@ export default defineConfig({
         },
       ],
     }),
+    SvelteKitPWA(),
   ],
   server: {
     watch: {

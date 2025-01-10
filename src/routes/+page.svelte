@@ -6,6 +6,9 @@
   import "../styles/app.css";
   import { page } from "$app/state";
   import SvelteSeo from "svelte-seo";
+  import { pwaInfo } from "virtual:pwa-info";
+
+  $: webManifestLink = pwaInfo ? pwaInfo.webManifest.linkTag : "";
 
   const defaultHeight = page.url.searchParams.get("height");
   const defaultWeight = page.url.searchParams.get("weight");
@@ -18,11 +21,19 @@
   });
 </script>
 
+<svelte:head>
+  <!-- eslint-disable-next-line -->
+  {@html webManifestLink}
+</svelte:head>
+
 <SvelteSeo
   title="Pokémètre"
   description="Pokémètre is a console that matches you with one of the 1300+ Pokémon known to existence."
   canonical="https://pokemetre.yassinedoghri.com/"
   openGraph={{
+    title: "Pokémètre",
+    url: "https://pokemetre.yassinedoghri.com/",
+    type: "website",
     images: [
       {
         url: "https://pokemetre.yassinedoghri.com/images/pokemetre-og.jpg",
