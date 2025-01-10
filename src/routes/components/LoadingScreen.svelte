@@ -2,8 +2,8 @@
   <div class="flex flex-col items-center">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width="1em"
+      height="1em"
       viewBox="0 0 24 24"
       ><rect width="6" height="14" x="1" y="4" fill="currentColor"
         ><animate

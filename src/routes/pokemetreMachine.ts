@@ -44,11 +44,14 @@ export const pokemetreMachine = setup({
     context: {} as {
       height: string;
       weight: string;
+      isHeightSet: boolean;
+      isWeightSet: boolean;
       pokemon: Pokemon | null;
       error: unknown;
     },
     events: {} as
       | { type: "START" }
+      | { type: "ABOUT" }
       | { type: "NEXT" }
       | { type: "PREV" }
       | { type: "EDIT_HEIGHT" }
@@ -57,7 +60,11 @@ export const pokemetreMachine = setup({
       | { type: "RETRY" }
       | { type: "HOME" }
       | { type: "height.UPDATE"; height: string }
-      | { type: "weight.UPDATE"; weight: string },
+      | { type: "height.SET"; isHeightSet: boolean }
+      | { type: "height.EDIT"; isHeightSet: boolean }
+      | { type: "weight.UPDATE"; weight: string }
+      | { type: "weight.SET"; isWeightSet: boolean }
+      | { type: "weight.EDIT"; isWeightSet: boolean },
   },
   actors: {
     fetchPokemon: fromPromise<unknown, { height: string; weight: string }>(
@@ -77,6 +84,8 @@ export const pokemetreMachine = setup({
   context: {
     height: "",
     weight: "",
+    isHeightSet: false,
+    isWeightSet: false,
     pokemon: null,
     error: null,
   },
@@ -84,16 +93,38 @@ export const pokemetreMachine = setup({
     home: {
       on: {
         START: "settingHeight",
+        ABOUT: "about",
+      },
+    },
+    about: {
+      on: {
+        HOME: "home",
       },
     },
     settingHeight: {
       on: {
         "height.UPDATE": {
           actions: assign({
-            height: ({ event }) => Number(event.height).toString(),
+            height: ({ event }) =>
+              event.height !== "" ? Number(event.height).toString() : "",
           }),
         },
-        NEXT: "settingWeight",
+        "height.SET": [
+          {
+            actions: assign({
+              isHeightSet: ({ event }) => event.isHeightSet,
+            }),
+            guard: ({ context }) => !context.isWeightSet,
+            target: "settingWeight",
+          },
+          {
+            actions: assign({
+              isHeightSet: ({ event }) => event.isHeightSet,
+            }),
+            guard: ({ context }) => context.isWeightSet,
+            target: "summary",
+          },
+        ],
         PREV: "home",
       },
     },
@@ -101,17 +132,33 @@ export const pokemetreMachine = setup({
       on: {
         "weight.UPDATE": {
           actions: assign({
-            weight: ({ event }) => Number(event.weight).toString(),
+            weight: ({ event }) =>
+              event.weight !== "" ? Number(event.weight).toString() : "",
           }),
         },
-        NEXT: "summary",
+        "weight.SET": {
+          actions: assign({
+            isWeightSet: ({ event }) => event.isWeightSet,
+          }),
+          target: "summary",
+        },
         PREV: "settingHeight",
       },
     },
     summary: {
       on: {
-        EDIT_HEIGHT: "settingHeight",
-        EDIT_WEIGHT: "settingWeight",
+        "height.EDIT": {
+          actions: assign({
+            isHeightSet: ({ event }) => event.isHeightSet,
+          }),
+          target: "settingHeight",
+        },
+        "weight.EDIT": {
+          actions: assign({
+            isWeightSet: ({ event }) => event.isWeightSet,
+          }),
+          target: "settingWeight",
+        },
         FIND: "loadingPokemon",
       },
     },

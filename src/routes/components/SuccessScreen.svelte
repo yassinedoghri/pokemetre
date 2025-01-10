@@ -24,7 +24,8 @@
     class="col-start-2 row-span-3 h-full mix-blend-overlay transition-all hover:mix-blend-normal"
   />
   <button
-    data-active-index="0"
+    data-activatable
+    data-is-active
     type="button"
     class="row-start-3 mt-auto"
     onclick={onHome}>Home</button

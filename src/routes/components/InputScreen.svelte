@@ -20,8 +20,8 @@
     <span class="font-display-mono">{step}/2</span>
     <label class="flex flex-col">
       {label}
-      <div class="font-display-mono font-bold after:animate-blink">
-        {defaultValue === "" ? "0" : defaultValue}
+      <div class="h-12 font-display-mono font-bold after:animate-blink">
+        {defaultValue}
       </div>
       <input
         {name}
@@ -33,9 +33,12 @@
       />
     </label>
   </div>
-  <button data-active-index="-1" type="button" onclick={onPrev}>Previous</button
-  >
-  <button data-active-index="0" type="button" onclick={onNext}>Next</button>
+  <div class="col-span-2 flex items-center justify-around">
+    <button data-activatable type="button" onclick={onPrev}>Previous</button>
+    <button data-activatable data-is-active type="button" onclick={onNext}
+      >Next</button
+    >
+  </div>
 </div>
 
 <style lang="postcss">
@@ -53,9 +56,5 @@
     input {
       @apply absolute h-0 w-0 opacity-0;
     }
-  }
-
-  button {
-    @apply place-self-center;
   }
 </style>

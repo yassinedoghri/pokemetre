@@ -68,57 +68,112 @@ export const triggerKeydown = (key: string) => {
   );
 };
 
-export const initActiveElement = () => {
-  const activeElement = document.querySelector(
-    "#display-panel [data-active-index='0']"
-  ) as HTMLElement | null;
+export const initActivatableElements = () => {
+  const activatableElements = document.querySelectorAll(
+    "#display-panel [data-activatable]"
+  ) as NodeListOf<HTMLElement>;
 
-  if (activeElement) {
-    activeElement.dataset.isActive = "";
-  }
+  activatableElements.forEach((activableElement, key) => {
+    activableElement.dataset.activatableIndex = key.toString();
+  });
 };
 
-export const getCurrentActiveElement = (): HTMLElement | null => {
-  const activeElement = document.querySelector(
+const getFirstActivatableElement = () => {
+  return document.querySelector(
+    "#display-panel [data-activatable]:first-child"
+  ) as HTMLElement | null;
+};
+
+const getLastActivatableElement = () => {
+  return document.querySelector(
+    "#display-panel [data-activatable]:last-child"
+  ) as HTMLElement | null;
+};
+
+export const getCurrentActiveElement = () => {
+  const currentActiveElement = document.querySelector(
     `#display-panel [data-is-active]`
   ) as HTMLElement | null;
 
-  if (!activeElement) {
-    initActiveElement();
+  if (currentActiveElement) {
+    return currentActiveElement;
   }
 
-  return activeElement;
+  const firstActivatableElement = getFirstActivatableElement();
+
+  if (!firstActivatableElement) {
+    return null;
+  }
+
+  return firstActivatableElement;
+};
+
+const activateElement = (element: HTMLElement) => {
+  const currentActiveElement = getCurrentActiveElement();
+  if (currentActiveElement) {
+    currentActiveElement.removeAttribute("data-is-active");
+  }
+
+  element.dataset.isActive = "";
+};
+
+const getNextActivatableElement = () => {
+  const currentActiveElement = getCurrentActiveElement();
+
+  if (!currentActiveElement) {
+    return null;
+  }
+
+  const activatableIndex = Number(
+    currentActiveElement.dataset.activatableIndex
+  );
+  const nextElement = document.querySelector(
+    `#display-panel [data-activatable-index="${activatableIndex + 1}"]`
+  ) as HTMLElement | null;
+
+  if (nextElement) {
+    return nextElement;
+  }
+
+  // loop back to first
+  return getFirstActivatableElement();
+};
+
+const getPreviousActivatableElement = () => {
+  const currentActiveElement = getCurrentActiveElement();
+
+  if (!currentActiveElement) {
+    return null;
+  }
+
+  const activatableIndex = Number(
+    currentActiveElement.dataset.activatableIndex
+  );
+  const previousElement = document.querySelector(
+    `#display-panel [data-activatable-index="${activatableIndex - 1}"]`
+  ) as HTMLElement | null;
+
+  if (previousElement) {
+    return previousElement;
+  }
+
+  // loop back to first
+  return getLastActivatableElement();
 };
 
 export const activateNextElement = () => {
-  const currentActiveElement = getCurrentActiveElement();
+  const nextElement = getNextActivatableElement();
 
-  if (currentActiveElement) {
-    const activeIndex = Number(currentActiveElement.dataset.activeIndex);
-    const nextElement = document.querySelector(
-      `#display-panel [data-active-index="${activeIndex + 1}"]`
-    ) as HTMLElement | null;
-
-    if (nextElement) {
-      currentActiveElement.removeAttribute("data-is-active");
-      nextElement.dataset.isActive = "";
-    }
+  if (nextElement) {
+    activateElement(nextElement);
   }
 };
 
 export const activatePreviousElement = () => {
-  const currentActiveElement = getCurrentActiveElement();
+  const previousElement = getPreviousActivatableElement();
 
-  if (currentActiveElement) {
-    const activeIndex = Number(currentActiveElement.dataset.activeIndex);
-    const previousElement = document.querySelector(
-      `#display-panel [data-active-index="${activeIndex - 1}"]`
-    ) as HTMLElement | null;
-
-    if (previousElement) {
-      currentActiveElement.removeAttribute("data-is-active");
-      previousElement.dataset.isActive = "";
-    }
+  if (previousElement) {
+    activateElement(previousElement);
   }
 };
 

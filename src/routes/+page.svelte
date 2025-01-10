@@ -23,13 +23,10 @@
     </div>
     <h1 class="text-right text-xl font-bold text-red-950">Pokémètre</h1>
   </header>
-  <main class="px-4">
+  <main class="px-4 pb-10">
     <ScreenBase {machine} />
     <Controls />
   </main>
-  <footer class="mt-auto px-8 py-2 text-right text-xs text-red-950">
-    © Yassine Doghri
-  </footer>
 </div>
 
 <style lang="postcss">

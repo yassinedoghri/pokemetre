@@ -24,7 +24,8 @@
   </div>
 
   <button
-    data-active-index="0"
+    data-activatable
+    data-is-active
     type="button"
     class="row-start-3 place-self-start"
     onclick={onRetry}>Retry</button

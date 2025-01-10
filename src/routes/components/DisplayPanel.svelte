@@ -5,8 +5,9 @@
   import FailureScreen from "./FailureScreen.svelte";
   import SuccessScreen from "./SuccessScreen.svelte";
   import HomeScreen from "./HomeScreen.svelte";
-  import { initActiveElement, handleScreenAction } from "./ui-actions";
+  import { initActivatableElements, handleScreenAction } from "./ui-actions";
   import type { PokemetreMachine } from "../pokemetreMachine";
+  import AboutScreen from "./AboutScreen.svelte";
 
   interface Props {
     machine: PokemetreMachine;
@@ -25,7 +26,7 @@
 
   $effect(() => {
     if (prevScreenState) {
-      initActiveElement();
+      initActivatableElements();
     }
   });
 </script>
@@ -37,6 +38,15 @@
     <HomeScreen
       onStart={() => {
         send({ type: "START" });
+      }}
+      onAbout={() => {
+        send({ type: "ABOUT" });
+      }}
+    />
+  {:else if $snapshot.matches("about")}
+    <AboutScreen
+      onOK={() => {
+        send({ type: "HOME" });
       }}
     />
   {:else if $snapshot.matches("settingHeight")}
@@ -55,7 +65,7 @@
         send({ type: "PREV" });
       }}
       onNext={() => {
-        send({ type: "NEXT" });
+        send({ type: "height.SET", isHeightSet: true });
       }}
     />
   {:else if $snapshot.matches("settingWeight")}
@@ -74,7 +84,7 @@
         send({ type: "PREV" });
       }}
       onNext={() => {
-        send({ type: "NEXT" });
+        send({ type: "weight.SET", isWeightSet: true });
       }}
     />
   {:else if $snapshot.matches("summary")}
@@ -82,10 +92,10 @@
       height={$snapshot.context.height}
       weight={$snapshot.context.weight}
       onEditHeight={() => {
-        send({ type: "EDIT_HEIGHT" });
+        send({ type: "height.EDIT", isHeightSet: false });
       }}
       onEditWeight={() => {
-        send({ type: "EDIT_WEIGHT" });
+        send({ type: "weight.EDIT", isWeightSet: false });
       }}
       onFind={() => {
         send({ type: "FIND" });

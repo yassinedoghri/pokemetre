@@ -14,11 +14,19 @@
 <section class="screen">
   <div class="bezel">
     <div class="steps-indicators">
-      <div class="step" class:active={$snapshot.context.height !== ""}>
-        <span class="sr-only">Step 1 - Height</span>
+      <div
+        class="step"
+        class:active={$snapshot.context.height !== ""}
+        class:valid={$snapshot.context.isHeightSet}
+      >
+        <span class="sr-only">Step 1 - Set height</span>
       </div>
-      <div class="step" class:active={$snapshot.context.weight !== ""}>
-        <span class="sr-only">Step 2 - Weight</span>
+      <div
+        class="step"
+        class:active={$snapshot.context.weight !== ""}
+        class:valid={$snapshot.context.isWeightSet}
+      >
+        <span class="sr-only">Step 2 - Set weight</span>
       </div>
     </div>
     <DisplayPanel {machine} />
@@ -48,6 +56,12 @@
             @apply bg-yellow-400 shadow-orange-500;
 
             box-shadow: 0 0 4px 0 theme(colors.yellow.500 / 75%);
+          }
+
+          &.valid {
+            @apply bg-green-400 shadow-green-500;
+
+            box-shadow: 0 0 4px 0 theme(colors.green.500 / 75%);
           }
         }
       }

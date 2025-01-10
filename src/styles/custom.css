@@ -1,11 +1,19 @@
 #display-panel {
   @apply bg-screen text-screen-contrast;
 
-  button {
-    @apply h-fit w-fit border-2 border-dotted border-screen-contrast px-4 font-bold;
+  button[data-activatable] {
+    @apply inline-flex h-fit w-fit border-2 border-dotted border-screen-contrast px-4 font-bold;
   }
-}
 
-button[data-is-active] {
-  @apply bg-screen-contrast text-screen;
+  button[data-is-active] {
+    @apply bg-screen-contrast text-screen;
+  }
+
+  a[data-activatable] {
+    @apply inline-flex items-center gap-x-1 border-b-2 border-dotted border-screen-contrast font-bold;
+  }
+
+  a[data-is-active] {
+    @apply border-solid;
+  }
 }
