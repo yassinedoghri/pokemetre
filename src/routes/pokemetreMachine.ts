@@ -49,6 +49,10 @@ export const pokemetreMachine = setup({
       pokemon: Pokemon | null;
       error: unknown;
     },
+    input: {} as {
+      defaultHeight: string;
+      defaultWeight: string;
+    },
     events: {} as
       | { type: "START" }
       | { type: "ABOUT" }
@@ -72,7 +76,7 @@ export const pokemetreMachine = setup({
         const pokemon = await fetchPokemon(input.height, input.weight);
 
         // TODO: keep this 1s delay?
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
 
         return pokemon;
       }
@@ -81,14 +85,16 @@ export const pokemetreMachine = setup({
 }).createMachine({
   id: "pokemetre",
   initial: "home",
-  context: {
-    height: "",
-    weight: "",
-    isHeightSet: false,
-    isWeightSet: false,
+  context: ({ input }) => ({
+    height: isNaN(Number(input.defaultHeight)) ? "" : input.defaultHeight,
+    weight: isNaN(Number(input.defaultWeight)) ? "" : input.defaultWeight,
+    isHeightSet:
+      !isNaN(Number(input.defaultHeight)) && input.defaultHeight !== "",
+    isWeightSet:
+      !isNaN(Number(input.defaultWeight)) && input.defaultWeight !== "",
     pokemon: null,
     error: null,
-  },
+  }),
   states: {
     home: {
       on: {

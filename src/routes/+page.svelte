@@ -4,8 +4,17 @@
   import ScreenBase from "./components/ScreenBase.svelte";
   import { pokemetreMachine } from "./pokemetreMachine";
   import "../styles/app.css";
+  import { page } from "$app/state";
 
-  const machine = useMachine(pokemetreMachine);
+  const defaultHeight = page.url.searchParams.get("height");
+  const defaultWeight = page.url.searchParams.get("weight");
+
+  const machine = useMachine(pokemetreMachine, {
+    input: {
+      defaultHeight: defaultHeight ?? "",
+      defaultWeight: defaultWeight ?? "",
+    },
+  });
 </script>
 
 <div

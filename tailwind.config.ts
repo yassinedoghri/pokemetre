@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
+import motion from "tailwindcss-motion";
 
 export default {
   content: ["./src/**/*.{html,js,svelte,ts}"],
@@ -28,6 +29,5 @@ export default {
       },
     },
   },
-
-  plugins: [],
+  plugins: [motion],
 } satisfies Config;

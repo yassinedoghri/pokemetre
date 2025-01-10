@@ -39,6 +39,6 @@
           values="1;0"
         /></rect
       ></svg
-    ><span class="font-bold">Loading your Pokemon</span>
+    ><span class="font-bold">Matching you with a Pokemon</span>
   </div>
 </div>

@@ -118,6 +118,8 @@
       onHome={() => {
         send({ type: "HOME" });
       }}
+      height={$snapshot.context.height}
+      weight={$snapshot.context.weight}
     />
   {/if}
 </div>

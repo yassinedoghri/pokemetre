@@ -40,6 +40,7 @@
       <a
         href="https://github.com/yassinedoghri/pokemetre/blob/main/LICENSE.md"
         data-activatable
+        target="_blank"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +54,10 @@
           /></svg
         >AGPL-3.0</a
       >
-      <a href="https://github.com/yassinedoghri/pokemetre" data-activatable
+      <a
+        href="https://github.com/yassinedoghri/pokemetre"
+        data-activatable
+        target="_blank"
         ><svg
           xmlns="http://www.w3.org/2000/svg"
           width="1em"
