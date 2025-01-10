@@ -2,11 +2,12 @@
   import type { MouseEventHandler } from "svelte/elements";
 
   interface Props {
+    isContinue: boolean;
     onStart: MouseEventHandler<HTMLButtonElement>;
     onAbout: MouseEventHandler<HTMLButtonElement>;
   }
 
-  let { onStart, onAbout }: Props = $props();
+  let { isContinue, onStart, onAbout }: Props = $props();
 </script>
 
 <div class="relative grid h-full">
@@ -30,6 +31,6 @@
     data-is-active
     type="button"
     class="place-self-center"
-    onclick={onStart}>Start</button
+    onclick={onStart}>{isContinue ? "Continue" : "Start"}</button
   >
 </div>

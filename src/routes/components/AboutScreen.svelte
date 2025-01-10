@@ -35,7 +35,7 @@
     <a data-activatable href="https://pokeapi.co/" target="_blank">PokéAPI</a>.
   </p>
 
-  <div class="mt-auto flex w-full items-center justify-between">
+  <div class="mt-auto flex w-full items-end justify-between">
     <div class="flex flex-col items-start gap-y-2 text-sm">
       <a
         href="https://github.com/yassinedoghri/pokemetre/blob/main/LICENSE.md"
@@ -71,12 +71,8 @@
       >
     </div>
 
-    <button
-      data-activatable
-      data-is-active
-      type="button"
-      class="mt-4"
-      onclick={onOK}>Gotcha!</button
+    <button data-activatable data-is-active type="button" onclick={onOK}
+      >Gotcha!</button
     >
   </div>
 </div>

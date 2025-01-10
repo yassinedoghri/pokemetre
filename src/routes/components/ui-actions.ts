@@ -69,24 +69,46 @@ export const triggerKeydown = (key: string) => {
 };
 
 export const initActivatableElements = () => {
-  const activatableElements = document.querySelectorAll(
+  const displayPanel = document.querySelector(
+    "#display-panel"
+  ) as HTMLElement | null;
+
+  if (!displayPanel) {
+    return;
+  }
+
+  const activatableElements = displayPanel.querySelectorAll(
     "#display-panel [data-activatable]"
   ) as NodeListOf<HTMLElement>;
 
+  let lastIndex = "0";
   activatableElements.forEach((activableElement, key) => {
     activableElement.dataset.activatableIndex = key.toString();
+    lastIndex = key.toString();
   });
+
+  displayPanel.dataset.lastActivatableIndex = lastIndex;
 };
 
 const getFirstActivatableElement = () => {
   return document.querySelector(
-    "#display-panel [data-activatable]:first-child"
+    "#display-panel [data-activatable-index='0']"
   ) as HTMLElement | null;
 };
 
 const getLastActivatableElement = () => {
+  const displayPanel = document.querySelector(
+    "#display-panel"
+  ) as HTMLElement | null;
+
+  if (!displayPanel) {
+    return;
+  }
+
+  const lastActivatableIndex = displayPanel.dataset.lastActivatableIndex ?? "0";
+
   return document.querySelector(
-    "#display-panel [data-activatable]:last-child"
+    `#display-panel [data-activatable-index='${lastActivatableIndex}']`
   ) as HTMLElement | null;
 };
 

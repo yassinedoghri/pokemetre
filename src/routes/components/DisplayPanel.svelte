@@ -36,6 +36,8 @@
 <div class="h-full p-4 font-display" id="display-panel">
   {#if $snapshot.matches("home")}
     <HomeScreen
+      isContinue={$snapshot.context.isHeightSet ||
+        $snapshot.context.isHeightSet}
       onStart={() => {
         send({ type: "START" });
       }}

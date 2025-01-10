@@ -92,7 +92,20 @@ export const pokemetreMachine = setup({
   states: {
     home: {
       on: {
-        START: "settingHeight",
+        START: [
+          {
+            guard: ({ context }) => !context.isHeightSet,
+            target: "settingHeight",
+          },
+          {
+            guard: ({ context }) => context.isHeightSet && !context.isWeightSet,
+            target: "settingWeight",
+          },
+          {
+            guard: ({ context }) => context.isHeightSet && context.isWeightSet,
+            target: "summary",
+          },
+        ],
         ABOUT: "about",
       },
     },
