@@ -32,6 +32,9 @@
   canonical="https://pokemetre.yassinedoghri.com/"
   openGraph={{
     title: "Pokémètre",
+    description:
+      "Pokémètre is a console that matches you with one of the 1300+ Pokémon known to existence.",
+    image: "https://pokemetre.yassinedoghri.com/images/pokemetre-og.jpg",
     url: "https://pokemetre.yassinedoghri.com/",
     type: "website",
     images: [
